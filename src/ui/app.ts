@@ -436,8 +436,10 @@ async function download(s: State) {
       await navigator.share({ files: [file], title: 'Backup da Consagração' })
       commit({ ...s, lastBackup: todayLocal() })
       return
-    } catch {
-      /* fall back to a download link */
+    } catch (e) {
+      // The user closed the share sheet: no backup was made, so none is recorded.
+      if ((e as DOMException).name === 'AbortError') return
+      /* other failures fall back to a download link */
     }
   }
   const url = URL.createObjectURL(blob)
