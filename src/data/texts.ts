@@ -5,7 +5,7 @@
 // "* * *" separator; everything else is a paragraph whose lines are kept.
 // An optional "\n---\n" separates the edition's footnotes.
 
-import type { PrayerId } from './schedule'
+import { SCHEDULE, type PrayerId } from './schedule'
 
 export type BlockType = 'heading' | 'subheading' | 'separator' | 'paragraph' | 'verses'
 
@@ -110,7 +110,8 @@ function titleFor(id: string, folder: string): { title: string; source: keyof ty
     const [, b, c] = id.split('-')
     return { title: `Imitação de Cristo, livro ${['I', 'II', 'III', 'IV'][+b - 1]}, capítulo ${c}`, source: 'imitacao' }
   }
-  return { title: id, source: 'evangelho' }
+  const ref = SCHEDULE.flatMap((d) => d.readings).find((r) => r.textId === id)?.ref
+  return { title: ref ? `Evangelho segundo ${ref}` : id, source: 'evangelho' }
 }
 
 const REGISTRY: Record<string, Text> = {}

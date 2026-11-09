@@ -178,7 +178,7 @@ function dayContent(s: State, day: number, title: string) {
       'section',
       { class: 'sheet' },
       progressBar(s, day),
-      day === 34 && feast ? h('p', { class: 'note' }, `Hoje é ${feast.name}. Tratado nº 231–232.`) : '',
+      day === 34 && feast ? h('p', { class: 'note' }, `Festa: ${feast.name}. O que fazer neste dia está no Tratado, nº 231–232.`) : '',
       h('ul', { class: 'items' }, ...itemsFor(day).map((it) => itemRow(s, day, it))),
       h('p', { class: 'credit' }, ART[phase].credit),
     ),
@@ -246,7 +246,7 @@ function afterView(s: State, feastName: string) {
   return h(
     'main',
     { class: 'page' },
-    hero('festa', 'Consagrado a Jesus por Maria', `${feastName}, ${longDate(s.feastDate)}`),
+    hero('festa', 'Consagração feita', `${feastName}, ${longDate(s.feastDate)}`),
     h(
       'section',
       { class: 'sheet' },
@@ -373,12 +373,9 @@ function renderBlocks(t: Text): HTMLElement[] {
           }),
         )
       default: {
-        const p = h('p', { class: b.lines.length > 1 ? 'r-lines' : '' })
-        b.lines.forEach((l, i) => {
-          if (i) p.append(h('br'))
-          p.append(l)
-        })
-        return p
+        if (b.lines.length === 1) return h('p', {}, b.lines[0])
+        // Verse and litany lines: hanging indent so a wrapped line reads as one invocation.
+        return h('p', { class: 'r-lines' }, ...b.lines.map((l) => h('span', {}, l)))
       }
     }
   })
